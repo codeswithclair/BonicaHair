@@ -429,6 +429,8 @@ export default function App() {
   const [elixiumOpen, setElixiumOpen] = useState(false)
   const [selectedService, setSelectedService] = useState<string | null>(null)
   const [galleryFilter, setGalleryFilter] = useState('')
+  const [activeServiceSlide, setActiveServiceSlide] = useState(0)
+  const servicesMobileRef = useRef<HTMLDivElement>(null)
 
   const toggleTreatment = (id: number) => {
     setOpenTreatment(prev => (prev === id ? null : id))
@@ -701,6 +703,14 @@ export default function App() {
 
           {/* Mobile: horizontal scroll — flush px-5, scrollbar hidden, dot indicator */}
           <div
+            ref={servicesMobileRef}
+            onScroll={event => {
+              const container = event.currentTarget
+              const firstCard = container.firstElementChild
+              if (firstCard) {
+                setActiveServiceSlide(Math.round(container.scrollLeft / (firstCard.clientWidth + 16)))
+              }
+            }}
             className="md:hidden overflow-x-auto flex gap-4 snap-x snap-mandatory hide-scrollbar"
             style={{
               paddingLeft: '0.25rem',
@@ -743,13 +753,20 @@ export default function App() {
           {/* Swipe indicator dots */}
           <div className="md:hidden flex justify-center gap-1.5 mt-3">
             {services.map((s, i) => (
-              <div
+              <button
+                type="button"
                 key={s.id}
+                aria-label={`Ver servicio ${s.label}`}
+                onClick={() => {
+                  const card = servicesMobileRef.current?.children[i]
+                  card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+                  setActiveServiceSlide(i)
+                }}
                 className="rounded-full"
                 style={{
-                  width: i === 0 ? '16px' : '6px',
+                  width: i === activeServiceSlide ? '16px' : '6px',
                   height: '6px',
-                  backgroundColor: i === 0 ? '#BC7F91' : '#F5E0E5',
+                  backgroundColor: i === activeServiceSlide ? '#BC7F91' : '#F5E0E5',
                   transition: 'width 0.2s',
                 }}
               />
@@ -1035,15 +1052,14 @@ export default function App() {
             ))}
           </div>
 
-          {/* Mobile: horizontal swipe */}
-          <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-3 pb-4 snap-x snap-mandatory hide-scrollbar">
+          {/* Mobile: larger cards for easier viewing */}
+          <div className="md:hidden grid grid-cols-1 gap-4">
             {filteredGalleryItems.map((item) => (
               <div
                 key={item.id}
-                className="flex-none snap-start"
-                style={{ width: item.type === 'pair' ? '82vw' : '58vw' }}
+                className="w-full"
               >
-                <div className="w-full aspect-[3/4]">
+                <div className={`w-full ${item.type === 'pair' ? 'aspect-[4/3]' : 'aspect-[3/4]'}`}>
                   <GalleryCard item={item} />
                 </div>
               </div>
@@ -1167,8 +1183,11 @@ export default function App() {
               href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs tracking-[0.12em] uppercase text-[#BC7F91]/70 hover:text-[#995B70] transition-colors"
+              className="flex items-center gap-2 text-xs tracking-[0.12em] uppercase text-[#BC7F91]/70 hover:text-[#995B70] transition-colors"
             >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v8h4v-8h3.5l.5-4H13V9c0-.67.33-1 1-1z" />
+              </svg>
               Facebook
             </a>
           </div>
@@ -1245,14 +1264,9 @@ export default function App() {
           <p className="text-white/60 text-xs text-center">
             © {new Date().getFullYear()} Bonica Hair. Todos los derechos reservados.
           </p>
-          <div className="flex gap-6">
-            <a href="#servicios" className="text-white/70 text-xs tracking-[0.12em] uppercase hover:text-white transition-colors">
-              Servicios
-            </a>
-            <a href="#agenda" className="text-white/70 text-xs tracking-[0.12em] uppercase hover:text-white transition-colors">
-              Agenda
-            </a>
-          </div>
+          <p className="text-white/80 text-xs tracking-[0.12em] uppercase">
+            Tu cabello a tu manera.
+          </p>
         </div>
       </footer>
 
