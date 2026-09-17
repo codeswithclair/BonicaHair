@@ -1,0 +1,721 @@
+import { useState, useRef, useEffect } from 'react'
+import bonicaLogo from './assets/bonica-logo.png'
+import rollerGirl from './assets/roller-girl.png'
+import spriteDryer from './assets/sprite-dryer.png'
+import spriteComb from './assets/sprite-comb.png'
+import spriteScissors from './assets/sprite-scissors.png'
+import spriteCurler from './assets/sprite-curler.png'
+
+const services = [
+  { id: 'alisados', label: 'Alisados', featured: true },
+  { id: 'color', label: 'Color', featured: false },
+  { id: 'cortes', label: 'Cortes', featured: false },
+  { id: 'peinados', label: 'Peinados', featured: false },
+  { id: 'maquillaje', label: 'Maquillaje', featured: false },
+  { id: 'unas', label: 'Uñas', featured: false },
+]
+
+const treatments = [
+  {
+    id: 1,
+    num: '01',
+    name: 'Sistema 100',
+    intro: 'Alisado progresivo de alto rendimiento para todo tipo de cabello.',
+    products: [
+      { key: 's100-1', label: 'Producto 1' },
+      { key: 's100-2', label: 'Producto 2' },
+    ],
+  },
+  {
+    id: 2,
+    num: '02',
+    name: 'Sistema 100 de Algodón',
+    intro: 'Fórmula suave con proteínas naturales ideal para cabellos sensibles.',
+    products: [
+      { key: 'alg-1', label: 'Producto 1' },
+      { key: 'alg-2', label: 'Producto 2' },
+    ],
+  },
+  {
+    id: 3,
+    num: '03',
+    name: 'Nanoplastia de Frutos Rojos',
+    intro: 'Tratamiento nutritivo con antioxidantes para cabello brillante y sedoso.',
+    products: [
+      { key: 'nano-1', label: 'Producto 1' },
+      { key: 'nano-2', label: 'Producto 2' },
+      { key: 'nano-3', label: 'Producto 3' },
+    ],
+  },
+  {
+    id: 4,
+    num: '04',
+    name: 'Botox Capilar',
+    intro: 'Reconstrucción intensiva que rellena la fibra capilar desde adentro.',
+    products: [
+      { key: 'btx-1', label: 'Producto 1' },
+      { key: 'btx-2', label: 'Producto 2' },
+    ],
+  },
+]
+
+function useIntersection(threshold = 0.15) {
+  const ref = useRef<HTMLElement>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    if (!ref.current) return
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } },
+      { threshold }
+    )
+    obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [threshold])
+  return { ref, visible }
+}
+
+function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const { ref, visible } = useIntersection()
+  return (
+    <section
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(24px)',
+        transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+      }}
+    >
+      {children}
+    </section>
+  )
+}
+
+export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [openTreatment, setOpenTreatment] = useState<number | null>(null)
+
+  const toggleTreatment = (id: number) => {
+    setOpenTreatment(prev => (prev === id ? null : id))
+  }
+
+  const navLinks = [
+    { label: 'Servicios', href: '#servicios' },
+    { label: 'Tratamientos', href: '#tratamientos' },
+    { label: 'Resultados', href: '#resultados' },
+  ]
+  const navLinksRight = [
+    { label: 'Estudio', href: '#estudio' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-white text-[#30242B] font-[Inter,system-ui,sans-serif]">
+
+      {/* ── HEADER ── */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-5 pt-3">
+        {/* Desktop: floating pill nav */}
+        <div
+          className="hidden md:flex items-center justify-between h-10 px-5 rounded-full max-w-2xl mx-auto"
+          style={{ backgroundColor: '#BC7F91CC' }}
+        >
+          <nav className="flex gap-7 flex-1">
+            {navLinks.map(l => (
+              <a
+                key={l.label}
+                href={l.href}
+                className="text-white/85 text-[11px] tracking-[0.14em] uppercase hover:text-white transition-colors whitespace-nowrap"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          <a href="#" className="flex-none px-4">
+            <img
+              src={bonicaLogo}
+              alt="Bonica Hair"
+              className="h-6 w-auto"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
+          </a>
+
+          <nav className="flex gap-7 flex-1 justify-end items-center">
+            {navLinksRight.map(l => (
+              <a
+                key={l.label}
+                href={l.href}
+                className="text-white/85 text-[11px] tracking-[0.14em] uppercase hover:text-white transition-colors whitespace-nowrap"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href="#agenda"
+              className="px-4 py-1.5 rounded-full text-[11px] tracking-[0.14em] uppercase text-[#BC7F91] bg-white hover:bg-white/90 transition-colors whitespace-nowrap font-medium"
+            >
+              Agenda
+            </a>
+          </nav>
+        </div>
+
+        {/* Mobile: compact rounded bar */}
+        <div
+          className="flex md:hidden items-center justify-between h-10 px-5 rounded-full"
+          style={{ backgroundColor: '#BC7F91CC' }}
+        >
+          <a href="#">
+            <img
+              src={bonicaLogo}
+              alt="Bonica Hair"
+              className="h-6 w-auto"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
+          </a>
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label="Menú"
+            className="text-white p-1"
+          >
+            {menuOpen ? (
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <line x1="4" y1="4" x2="16" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="16" y1="4" x2="4" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <line x1="3" y1="6" x2="17" y2="6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="3" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="3" y1="14" x2="17" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Mobile menu dropdown */}
+        <div
+          className="md:hidden mx-0 overflow-hidden rounded-2xl mt-2"
+          style={{
+            maxHeight: menuOpen ? '280px' : '0',
+            transition: 'max-height 0.35s ease',
+            backgroundColor: '#995B70',
+          }}
+        >
+          <nav className="flex flex-col py-4 px-5 gap-1">
+            {[...navLinks, ...navLinksRight].map(l => (
+              <a
+                key={l.label}
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                className="text-white/90 text-sm tracking-[0.1em] uppercase py-2.5 border-b border-white/10 hover:text-white transition-colors"
+              >
+                {l.label}
+              </a>
+            ))}
+            <div className="pt-3 pb-1">
+              <a
+                href="#agenda"
+                onClick={() => setMenuOpen(false)}
+                className="block text-center px-4 py-2.5 rounded-full text-sm tracking-[0.1em] uppercase bg-white text-[#995B70] font-medium hover:bg-white/90 transition-colors"
+              >
+                Agenda
+              </a>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      {/* ── HERO ── */}
+      <section
+        className="relative overflow-hidden"
+        style={{ backgroundColor: '#FFF5F7' }}
+      >
+        {/* Inner container: padding-top clears the fixed nav, padding-bottom keeps hero compact */}
+        <div
+          className="relative mx-auto px-6"
+          style={{
+            maxWidth: '1100px',
+            paddingTop: 'clamp(4.5rem, 9vh, 6rem)',
+            paddingBottom: 'clamp(2rem, 4vh, 3.5rem)',
+          }}
+        >
+          {/* ── Sprite: blow dryer — upper-left of container ── */}
+          <img src={spriteDryer} alt="" aria-hidden style={{
+            position: 'absolute', top: '8%', left: '0%',
+            width: 'clamp(60px, 8vw, 110px)', transform: 'rotate(-20deg)',
+            mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 5, opacity: 0.85,
+          }} />
+
+          {/* ── Sprite: comb — lower-left ── */}
+          <img src={spriteComb} alt="" aria-hidden style={{
+            position: 'absolute', bottom: '10%', left: '1%',
+            width: 'clamp(50px, 6vw, 88px)', transform: 'rotate(20deg)',
+            mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 5, opacity: 0.8,
+          }} />
+
+          {/* ── Sprite: scissors — upper-right ── */}
+          <img src={spriteScissors} alt="" aria-hidden style={{
+            position: 'absolute', top: '6%', right: '1%',
+            width: 'clamp(52px, 6.5vw, 92px)', transform: 'rotate(10deg)',
+            mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 5, opacity: 0.85,
+          }} />
+
+          {/* ── Sprite: curler — lower-right ── */}
+          <img src={spriteCurler} alt="" aria-hidden style={{
+            position: 'absolute', bottom: '8%', right: '0%',
+            width: 'clamp(56px, 7vw, 100px)', transform: 'rotate(-18deg)',
+            mixBlendMode: 'multiply', pointerEvents: 'none', zIndex: 5, opacity: 0.82,
+          }} />
+
+          {/* ── Desktop: side-by-side layout ── */}
+          <div className="hidden md:flex items-center justify-center gap-10 relative z-10">
+            {/* Text block */}
+            <div className="flex flex-col gap-1">
+              <h1 style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontWeight: 300, color: '#BC7F91',
+                letterSpacing: '-0.02em', lineHeight: 0.88,
+                fontSize: 'clamp(5rem, 8.5vw, 9.5rem)', margin: 0, whiteSpace: 'nowrap',
+              }}>
+                Bonica&thinsp;<span style={{ fontStyle: 'italic' }}>Hair</span>
+              </h1>
+              <p style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic', fontSize: '0.75rem',
+                letterSpacing: '0.24em', color: '#BC7F91', opacity: 0.6,
+                paddingLeft: '0.25rem', marginTop: '0.6rem',
+              }}>
+                by Cris Hdz
+              </p>
+              <p style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic', fontSize: '1rem',
+                color: '#30242B', opacity: 0.45, paddingLeft: '0.25rem',
+              }}>
+                Belleza a tu manera.
+              </p>
+            </div>
+
+            {/* Roller girl — beside the title */}
+            <img
+              src={rollerGirl}
+              alt="Bonica Hair illustration"
+              style={{
+                width: 'clamp(140px, 16vw, 220px)',
+                flexShrink: 0,
+                mixBlendMode: 'multiply',
+                display: 'block',
+              }}
+            />
+          </div>
+
+          {/* ── Mobile: stacked layout ── */}
+          <div className="flex md:hidden flex-col items-center text-center gap-4 relative z-10">
+            <h1 style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontWeight: 300, color: '#BC7F91',
+              letterSpacing: '-0.02em', lineHeight: 0.88,
+              fontSize: 'clamp(3.6rem, 18vw, 5.2rem)', margin: 0,
+            }}>
+              Bonica<br /><span style={{ fontStyle: 'italic' }}>Hair</span>
+            </h1>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+              <p style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic', fontSize: '0.7rem',
+                letterSpacing: '0.24em', color: '#BC7F91', opacity: 0.6,
+              }}>
+                by Cris Hdz
+              </p>
+              <p style={{
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                fontStyle: 'italic', fontSize: '0.95rem',
+                color: '#30242B', opacity: 0.45,
+              }}>
+                Belleza a tu manera.
+              </p>
+            </div>
+            {/* Roller girl below text on mobile */}
+            <img
+              src={rollerGirl}
+              alt="Bonica Hair illustration"
+              style={{
+                width: 'clamp(120px, 36vw, 180px)',
+                mixBlendMode: 'multiply',
+                display: 'block',
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICIOS ── */}
+      <section id="servicios" className="pt-12 pb-10 px-6">
+        <FadeIn className="max-w-7xl mx-auto">
+          <div className="flex items-baseline justify-between mb-7">
+            <h2
+              className="text-3xl md:text-4xl"
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#4A3728' }}
+            >
+              Servicios
+            </h2>
+            <span className="text-xs tracking-[0.15em] uppercase" style={{ color: '#BC7F91' }}>
+              Ver todos
+            </span>
+          </div>
+
+          {/* Mobile: horizontal scroll — flush px-5, scrollbar hidden, dot indicator */}
+          <div
+            className="md:hidden -mx-6 overflow-x-auto flex gap-3 snap-x snap-mandatory"
+            style={{ paddingLeft: '1.5rem', paddingRight: '1.5rem', paddingBottom: '0.75rem', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {services.map(s => (
+              <div
+                key={s.id}
+                className="flex-none snap-start flex flex-col gap-2"
+                style={{ width: '42vw', maxWidth: '180px' }}
+              >
+                <div
+                  className="w-full aspect-[3/4] rounded-sm"
+                  style={{ backgroundColor: s.featured ? '#F5E0E5' : '#FFF5F7', border: '1px solid #F5E0E5' }}
+                />
+                <div>
+                  <p className="text-sm font-medium tracking-wide">{s.label}</p>
+                  {s.featured && (
+                    <p className="text-xs text-[#BC7F91] mt-0.5">Especialidad</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Swipe indicator dots */}
+          <div className="md:hidden flex justify-center gap-1.5 mt-3">
+            {services.map((s, i) => (
+              <div
+                key={s.id}
+                className="rounded-full"
+                style={{
+                  width: i === 0 ? '16px' : '6px',
+                  height: '6px',
+                  backgroundColor: i === 0 ? '#BC7F91' : '#F5E0E5',
+                  transition: 'width 0.2s',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Desktop: grid */}
+          <div className="hidden md:grid grid-cols-3 lg:grid-cols-6 gap-5">
+            {services.map(s => (
+              <div key={s.id} className="flex flex-col gap-3 group cursor-pointer">
+                <div
+                  className="w-full aspect-[3/4] rounded-sm transition-transform group-hover:scale-[1.02]"
+                  style={{ backgroundColor: s.featured ? '#F5E0E5' : '#FFF5F7', border: '1px solid #F5E0E5' }}
+                />
+                <div>
+                  <p className="text-sm font-medium tracking-wide">{s.label}</p>
+                  {s.featured && (
+                    <p className="text-xs text-[#BC7F91] mt-0.5">Especialidad</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── DIVIDER ── */}
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="h-px bg-[#F5E0E5]" />
+      </div>
+
+      {/* ── TRATAMIENTOS ── */}
+      <section id="tratamientos" className="pt-10 pb-12 px-6" style={{ backgroundColor: '#FAF7F2' }}>
+        <FadeIn className="max-w-3xl mx-auto">
+          <h2
+            className="text-3xl md:text-4xl mb-2"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#4A3728' }}
+          >
+            Tratamientos
+          </h2>
+          <p className="text-sm mb-10" style={{ color: '#4A3728', opacity: 0.5 }}>
+            Elige el tratamiento ideal para tu cabello.
+          </p>
+
+          <div className="flex flex-col">
+            {treatments.map((t, i) => (
+              <div key={t.id}>
+                {i > 0 && <div className="h-px" style={{ backgroundColor: '#E8DDD4' }} />}
+                <button
+                  className="w-full text-left py-6 flex items-start gap-6 group"
+                  onClick={() => toggleTreatment(t.id)}
+                >
+                  <span className="text-xs tracking-[0.15em] pt-0.5 flex-none" style={{ color: '#BC7F91' }}>
+                    {t.num}
+                  </span>
+                  <div className="flex-1">
+                    <p
+                      className="text-lg md:text-xl transition-colors group-hover:text-[#BC7F91]"
+                      style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, color: '#4A3728' }}
+                    >
+                      {t.name}
+                    </p>
+                    <p className="text-sm mt-1" style={{ color: '#4A3728', opacity: 0.5 }}>{t.intro}</p>
+                  </div>
+                  <span
+                    className="flex-none text-xl mt-1"
+                    style={{ color: '#BC7F91', transform: openTreatment === t.id ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease', display: 'inline-block' }}
+                  >
+                    +
+                  </span>
+                </button>
+
+                <div
+                  style={{
+                    maxHeight: openTreatment === t.id ? '600px' : '0',
+                    overflow: 'hidden',
+                    transition: 'max-height 0.45s ease',
+                  }}
+                >
+                  <div className="pb-8 pl-10 pr-2 flex flex-col gap-6">
+                    {/* Treatment detail fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {['Descripción', 'Beneficios', 'Tipo de cabello', 'Duración aprox.'].map(field => (
+                        <div key={field}>
+                          <p className="text-xs tracking-[0.12em] uppercase mb-1" style={{ color: '#BC7F91' }}>{field}</p>
+                          <div className="h-3 rounded w-3/4 mb-1" style={{ backgroundColor: '#E8DDD4' }} />
+                          <div className="h-3 rounded w-1/2" style={{ backgroundColor: '#E8DDD4' }} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* ELIXIUM product sub-section */}
+                    <div className="border-t pt-5" style={{ borderColor: '#E8DDD4' }}>
+                      <p className="text-xs tracking-[0.18em] uppercase mb-4" style={{ color: '#C4B5A5' }}>
+                        Productos que utilizamos
+                      </p>
+                      <div className="flex gap-4 flex-wrap">
+                        {t.products.map(p => (
+                          <div key={p.key} className="flex flex-col gap-2" style={{ width: '80px' }}>
+                            {/* Photo placeholder — replace src when product photos are ready */}
+                            <div
+                              className="rounded-sm w-full"
+                              style={{
+                                aspectRatio: '2/3',
+                                backgroundColor: '#F0EAE0',
+                                border: '1px solid #E8DDD4',
+                                display: 'flex',
+                                alignItems: 'flex-end',
+                                justifyContent: 'center',
+                                paddingBottom: '6px',
+                              }}
+                            >
+                              <span className="text-[8px] tracking-[0.1em] uppercase" style={{ color: '#C4B5A5' }}>
+                                Elixium
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-center leading-tight" style={{ color: '#4A3728', opacity: 0.55 }}>
+                              {p.label}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <a
+                      href="#agenda"
+                      className="self-start px-6 py-2.5 text-xs tracking-[0.15em] uppercase text-white transition-opacity hover:opacity-80"
+                      style={{ backgroundColor: '#BC7F91' }}
+                    >
+                      Agendar este tratamiento
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="h-px" style={{ backgroundColor: '#E8DDD4' }} />
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── RESULTADOS ── */}
+      <section id="resultados" style={{ backgroundColor: '#FFF5F7' }} className="pt-10 pb-12 px-6">
+        <FadeIn className="max-w-7xl mx-auto">
+          <div className="flex items-baseline justify-between mb-10">
+            <h2
+              className="text-3xl md:text-4xl"
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#4A3728' }}
+            >
+              Resultados
+            </h2>
+            <span className="text-xs tracking-[0.15em] uppercase" style={{ color: '#BC7F91' }}>
+              Galería
+            </span>
+          </div>
+
+          {/* Mobile: horizontal swipe */}
+          <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-3 pb-4 snap-x snap-mandatory">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex-none snap-start"
+                style={{ width: i % 3 === 0 ? '72vw' : '56vw' }}
+              >
+                <div
+                  className="w-full aspect-[3/4] rounded-sm"
+                  style={{ backgroundColor: '#F5E0E5', border: '1px solid #EDD0D8' }}
+                >
+                  <div className="flex items-center justify-center h-full">
+                    <span className="text-[10px] tracking-[0.12em] uppercase text-[#BC7F91]/60">
+                      {i % 2 === 0 ? 'Antes · Después' : 'Resultado'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: masonry-like grid */}
+          <div className="hidden md:grid grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className={`rounded-sm ${i === 0 || i === 4 ? 'row-span-2' : ''}`}
+                style={{
+                  aspectRatio: i === 0 || i === 4 ? '3/5' : '3/4',
+                  backgroundColor: '#F5E0E5',
+                  border: '1px solid #EDD0D8',
+                }}
+              >
+                <div className="flex items-center justify-center h-full">
+                  <span className="text-[10px] tracking-[0.12em] uppercase text-[#BC7F91]/60">
+                    {i % 2 === 0 ? 'Antes · Después' : 'Resultado'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── ESTUDIO ── */}
+      <section id="estudio" className="pt-10 pb-12 px-6" style={{ backgroundColor: '#F0EAE0' }}>
+        <FadeIn className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center">
+            <div
+              className="w-full md:w-2/5 aspect-[4/5] rounded-sm flex-none"
+              style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8DDD4' }}
+            >
+              <div className="flex items-center justify-center h-full">
+                <span className="text-xs tracking-[0.12em] uppercase" style={{ color: '#C4B5A5' }}>
+                  Fotografía del estudio
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <p className="text-xs tracking-[0.2em] uppercase" style={{ color: '#BC7F91' }}>El Estudio</p>
+              <h2
+                className="text-3xl md:text-4xl leading-tight"
+                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#4A3728' }}
+              >
+                Un espacio creado<br />
+                <span style={{ fontStyle: 'italic' }}>para ti.</span>
+              </h2>
+              <div className="space-y-3">
+                <div className="h-3 rounded w-full" style={{ backgroundColor: '#E8DDD4' }} />
+                <div className="h-3 rounded w-5/6" style={{ backgroundColor: '#E8DDD4' }} />
+                <div className="h-3 rounded w-4/5" style={{ backgroundColor: '#E8DDD4' }} />
+                <div className="h-3 rounded w-3/4" style={{ backgroundColor: '#E8DDD4' }} />
+              </div>
+              <p className="text-sm italic" style={{ color: '#4A3728', opacity: 0.45 }}>
+                Descripción del estudio próximamente.
+              </p>
+              <a
+                href="#agenda"
+                className="self-start text-xs tracking-[0.15em] uppercase pb-0.5 hover:opacity-70 transition-opacity"
+                style={{ color: '#BC7F91', borderBottom: '1px solid #BC7F91' }}
+              >
+                Conoce más →
+              </a>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── AGENDA ── */}
+      <section id="agenda" className="pt-12 pb-16 px-6" style={{ backgroundColor: '#FAF7F2' }}>
+        <FadeIn className="max-w-2xl mx-auto text-center">
+          <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: '#BC7F91' }}>Agenda</p>
+          <h2
+            className="text-3xl md:text-4xl mb-6"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#4A3728' }}
+          >
+            ¿Lista para tu cambio?
+          </h2>
+          <p className="text-sm mb-10 max-w-sm mx-auto" style={{ color: '#4A3728', opacity: 0.5 }}>
+            Trabajamos con cita previa. Escríbenos por WhatsApp y con gusto te atendemos.
+          </p>
+
+          <a
+            href="https://wa.me/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 text-sm tracking-[0.1em] uppercase text-white transition-opacity hover:opacity-80"
+            style={{ backgroundColor: '#BC7F91' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            WhatsApp para agendar
+          </a>
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <a
+              href="https://maps.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-xs tracking-[0.12em] uppercase text-[#BC7F91] hover:text-[#995B70] transition-colors"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              Ver ubicación en Google Maps
+            </a>
+            <a
+              href="#"
+              className="text-xs tracking-[0.12em] uppercase text-[#BC7F91]/70 hover:text-[#995B70] transition-colors"
+            >
+              Facebook
+            </a>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ backgroundColor: '#BC7F91' }} className="py-10 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <img
+            src={bonicaLogo}
+            alt="Bonica Hair"
+            className="h-8 w-auto"
+            style={{ filter: 'brightness(0) invert(1)' }}
+          />
+          <p className="text-white/60 text-xs text-center">
+            © {new Date().getFullYear()} Bonica Hair. Todos los derechos reservados.
+          </p>
+          <div className="flex gap-6">
+            <a href="#servicios" className="text-white/70 text-xs tracking-[0.12em] uppercase hover:text-white transition-colors">
+              Servicios
+            </a>
+            <a href="#agenda" className="text-white/70 text-xs tracking-[0.12em] uppercase hover:text-white transition-colors">
+              Agenda
+            </a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  )
+}
+

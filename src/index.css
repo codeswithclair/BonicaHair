@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Pink palette */
+  --color-white: #FFFFFF;
+  --color-pale-pink: #FFF5F7;
+  --color-blush: #F5E0E5;
+  --color-dusty-pink: #BC7F91;
+  --color-deep-rose: #995B70;
+
+  /* Warm neutral palette */
+  --color-cream: #FAF7F2;
+  --color-sand: #F0EAE0;
+  --color-taupe: #C4B5A5;
+  --color-warm-brown: #4A3728;
+  --color-dark: #30242B;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar on snap carousels */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-dark);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
