@@ -49,6 +49,21 @@ const services = [
   { id: 'unas', label: 'Uñas', featured: false, image: unas2, imageAlt: 'Diseño de uñas en Bonica Hair' },
 ]
 
+const servicePrices: Record<string, { title: string; price?: string; rows?: { person: string; price: string }[] }> = {
+  color: { title: 'Diseños de color', price: 'Desde $1,000 hasta $5,000' },
+  cortes: {
+    title: 'Cortes de cabello',
+    rows: [
+      { person: 'Dama', price: '$300' },
+      { person: 'Caballero', price: '$200' },
+      { person: 'Niños', price: '$150' },
+    ],
+  },
+  peinados: { title: 'Peinados', price: 'Desde $750' },
+  maquillaje: { title: 'Maquillaje', price: 'Desde $750' },
+  unas: { title: 'Uñas', price: 'Desde $380' },
+}
+
 type GalleryPair = {
   type: 'pair'
   id: string
@@ -412,6 +427,8 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [openTreatment, setOpenTreatment] = useState<number | null>(null)
   const [elixiumOpen, setElixiumOpen] = useState(false)
+  const [selectedService, setSelectedService] = useState<string | null>(null)
+  const [galleryFilter, setGalleryFilter] = useState('')
 
   const toggleTreatment = (id: number) => {
     setOpenTreatment(prev => (prev === id ? null : id))
@@ -425,6 +442,10 @@ export default function App() {
   const navLinksRight = [
     { label: 'Estudio', href: '#estudio' },
   ]
+  const selectedServiceInfo = selectedService ? servicePrices[selectedService] : null
+  const filteredGalleryItems = galleryFilter === ''
+    ? galleryItems.filter(item => item.type === 'pair').slice(0, 3)
+    : galleryItems.filter(item => item.label === galleryFilter || (galleryFilter === 'Alaciado' && item.label === 'Alaciados'))
 
   return (
     <div className="min-h-screen bg-white text-[#30242B] font-[Inter,system-ui,sans-serif]">
@@ -706,6 +727,15 @@ export default function App() {
                   {s.featured && (
                     <p className="text-xs text-[#BC7F91] mt-0.5">Especialidad</p>
                   )}
+                  {servicePrices[s.id] && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedService(s.id)}
+                      className="mt-2 text-[10px] tracking-[0.14em] uppercase text-[#BC7F91] hover:opacity-70"
+                    >
+                      Ver precios →
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -745,6 +775,15 @@ export default function App() {
                   <p className="text-sm font-medium tracking-wide">{s.label}</p>
                   {s.featured && (
                     <p className="text-xs text-[#BC7F91] mt-0.5">Especialidad</p>
+                  )}
+                  {servicePrices[s.id] && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedService(s.id)}
+                      className="mt-2 text-[10px] tracking-[0.14em] uppercase text-[#BC7F91] hover:opacity-70"
+                    >
+                      Ver precios →
+                    </button>
                   )}
                 </div>
               </div>
@@ -979,9 +1018,26 @@ export default function App() {
             </span>
           </div>
 
+          <div id="galeria" className="mb-6 flex flex-wrap gap-2">
+            {['Alaciado', 'Corte', 'Color', 'Maquillaje', 'Uñas'].map(filter => (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setGalleryFilter(filter)}
+                className="rounded-full px-3 py-1.5 text-[10px] tracking-[0.12em] uppercase transition-colors"
+                style={{
+                  color: galleryFilter === filter ? '#FFFFFF' : '#BC7F91',
+                  backgroundColor: galleryFilter === filter ? '#BC7F91' : '#F5E0E5',
+                }}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+
           {/* Mobile: horizontal swipe */}
           <div className="md:hidden -mx-6 px-6 overflow-x-auto flex gap-3 pb-4 snap-x snap-mandatory hide-scrollbar">
-            {galleryItems.map((item) => (
+            {filteredGalleryItems.map((item) => (
               <div
                 key={item.id}
                 className="flex-none snap-start"
@@ -996,7 +1052,7 @@ export default function App() {
 
           {/* Desktop: masonry-like grid */}
           <div className="hidden md:grid grid-cols-3 gap-4">
-            {galleryItems.map((item, i) => (
+            {filteredGalleryItems.map((item, i) => (
               <div
                 key={item.id}
                 className="rounded-sm"
@@ -1019,10 +1075,13 @@ export default function App() {
               className="w-full md:w-2/5 aspect-[4/5] rounded-sm flex-none"
               style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8DDD4' }}
             >
-              <div className="flex items-center justify-center h-full">
-                <span className="text-xs tracking-[0.12em] uppercase" style={{ color: '#C4B5A5' }}>
-                  Fotografía del estudio
-                </span>
+              <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
+                <p className="text-xs tracking-[0.18em] uppercase" style={{ color: '#BC7F91' }}>
+                  Desde [año de inicio]
+                </p>
+                <p className="text-sm italic" style={{ color: '#4A3728', opacity: 0.5 }}>
+                  Fotografía del estudio próximamente.
+                </p>
               </div>
             </div>
 
@@ -1035,22 +1094,15 @@ export default function App() {
                 Un espacio creado<br />
                 <span style={{ fontStyle: 'italic' }}>para ti.</span>
               </h2>
-              <div className="space-y-3">
-                <div className="h-3 rounded w-full" style={{ backgroundColor: '#E8DDD4' }} />
-                <div className="h-3 rounded w-5/6" style={{ backgroundColor: '#E8DDD4' }} />
-                <div className="h-3 rounded w-4/5" style={{ backgroundColor: '#E8DDD4' }} />
-                <div className="h-3 rounded w-3/4" style={{ backgroundColor: '#E8DDD4' }} />
-              </div>
-              <p className="text-sm italic" style={{ color: '#4A3728', opacity: 0.45 }}>
-                Descripción del estudio próximamente.
+              <p className="text-sm leading-relaxed" style={{ color: '#4A3728', opacity: 0.72 }}>
+                Te damos la bienvenida a un espacio pensado para que disfrutes tu cita con calma y te sientas como en casa.
               </p>
-              <a
-                href="#agenda"
-                className="self-start text-xs tracking-[0.15em] uppercase pb-0.5 hover:opacity-70 transition-opacity"
-                style={{ color: '#BC7F91', borderBottom: '1px solid #BC7F91' }}
-              >
-                Conoce más →
-              </a>
+              <ul className="space-y-3 text-sm" style={{ color: '#4A3728', opacity: 0.72 }}>
+                <li>• Música para crear un ambiente tranquilo.</li>
+                <li>• Un entorno calmado y acogedor.</li>
+                <li>• Silla cómoda para disfrutar tu servicio.</li>
+                <li>• Baño disponible para nuestras clientas.</li>
+              </ul>
             </div>
           </div>
         </FadeIn>
@@ -1122,6 +1174,64 @@ export default function App() {
           </div>
         </FadeIn>
       </section>
+
+      {selectedServiceInfo && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-[#30242B]/30 px-6"
+          role="presentation"
+          onClick={() => setSelectedService(null)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Precio de ${selectedServiceInfo.title}`}
+            className="w-full max-w-sm rounded-sm p-7 text-center"
+            style={{
+              backgroundColor: '#FFF5F7',
+              border: '1px solid #E8DDD4',
+              boxShadow: '0 18px 50px rgba(74, 55, 40, 0.18)',
+              animation: 'fadeIn 0.25s ease-out',
+            }}
+            onClick={event => event.stopPropagation()}
+          >
+            <p className="text-xs tracking-[0.18em] uppercase mb-3" style={{ color: '#BC7F91' }}>
+              Precios
+            </p>
+            <h3
+              className="text-2xl mb-4"
+              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, color: '#4A3728' }}
+            >
+              {selectedServiceInfo.title}
+            </h3>
+            {selectedServiceInfo.rows ? (
+              <div className="overflow-hidden rounded-sm border text-left" style={{ borderColor: '#E8DDD4' }}>
+                <div className="grid grid-cols-2 px-4 py-2 text-[10px] tracking-[0.14em] uppercase" style={{ backgroundColor: '#F5E0E5', color: '#BC7F91' }}>
+                  <span>Persona</span>
+                  <span>Precio</span>
+                </div>
+                {selectedServiceInfo.rows.map(row => (
+                  <div key={row.person} className="grid grid-cols-2 border-t px-4 py-3 text-sm" style={{ borderColor: '#E8DDD4', color: '#4A3728' }}>
+                    <span>{row.person}</span>
+                    <span>{row.price}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-lg leading-relaxed" style={{ color: '#4A3728' }}>
+                {selectedServiceInfo.price}
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => setSelectedService(null)}
+              className="mt-6 text-xs tracking-[0.15em] uppercase hover:opacity-70"
+              style={{ color: '#BC7F91' }}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── FOOTER ── */}
       <footer style={{ backgroundColor: '#BC7F91' }} className="py-10 px-6">
