@@ -6,6 +6,14 @@ import spriteComb from './assets/sprite-comb.png'
 import spriteScissors from './assets/sprite-scissors.png'
 import spriteCurler from './assets/sprite-curler.png'
 
+const whatsappUrl =
+  'https://wa.me/528443068856?text=Hola%2C%20quisiera%20agendar%20una%20cita%20en%20Bonica%20Hair.'
+const facebookUrl = 'https://www.facebook.com/bonicaasalon'
+const googleMapsUrl =
+  'https://www.google.com/search?kgmid=/g/11xyhttz5b&q=Bonica+Hair+by+Cris+Hdez'
+const googleMapsEmbedUrl =
+  'https://www.google.com/maps?q=Bonica%20Hair%20by%20Cris%20Hdez&output=embed'
+
 const services = [
   { id: 'alisados', label: 'Alisados', featured: true },
   { id: 'color', label: 'Color', featured: false },
@@ -272,7 +280,7 @@ export default function App() {
             <div className="flex flex-col gap-1">
               <h1 style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontWeight: 300, color: '#BC7F91',
+                fontWeight: 300, color: '#795B50',
                 letterSpacing: '-0.02em', lineHeight: 0.88,
                 fontSize: 'clamp(5rem, 8.5vw, 9.5rem)', margin: 0, whiteSpace: 'nowrap',
               }}>
@@ -280,18 +288,18 @@ export default function App() {
               </h1>
               <p style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: 'italic', fontSize: '0.75rem',
-                letterSpacing: '0.24em', color: '#BC7F91', opacity: 0.6,
+                fontStyle: 'italic', fontSize: '0.95rem',
+                letterSpacing: '0.22em', color: '#795B50', opacity: 0.82,
                 paddingLeft: '0.25rem', marginTop: '0.6rem',
               }}>
                 by Cris Hdz
               </p>
               <p style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: 'italic', fontSize: '1rem',
-                color: '#30242B', opacity: 0.45, paddingLeft: '0.25rem',
+                fontStyle: 'italic', fontSize: '1.2rem',
+                color: '#4A3728', opacity: 0.72, paddingLeft: '0.25rem',
               }}>
-                Belleza a tu manera.
+                Cuida tu cabello, es la única corona que no te quitas
               </p>
             </div>
 
@@ -312,7 +320,7 @@ export default function App() {
           <div className="flex md:hidden flex-col items-center text-center gap-4 relative z-10">
             <h1 style={{
               fontFamily: "'Cormorant Garamond', Georgia, serif",
-              fontWeight: 300, color: '#BC7F91',
+              fontWeight: 300, color: '#795B50',
               letterSpacing: '-0.02em', lineHeight: 0.88,
               fontSize: 'clamp(3.6rem, 18vw, 5.2rem)', margin: 0,
             }}>
@@ -321,17 +329,17 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
               <p style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: 'italic', fontSize: '0.7rem',
-                letterSpacing: '0.24em', color: '#BC7F91', opacity: 0.6,
+                fontStyle: 'italic', fontSize: '0.86rem',
+                letterSpacing: '0.2em', color: '#795B50', opacity: 0.82,
               }}>
                 by Cris Hdz
               </p>
               <p style={{
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: 'italic', fontSize: '0.95rem',
-                color: '#30242B', opacity: 0.45,
+                fontStyle: 'italic', fontSize: '1.06rem',
+                color: '#4A3728', opacity: 0.72,
               }}>
-                Belleza a tu manera.
+                Cuida tu cabello, es la única corona que no te quitas
               </p>
             </div>
             {/* Roller girl below text on mobile */}
@@ -657,7 +665,7 @@ export default function App() {
           </p>
 
           <a
-            href="https://wa.me/"
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-8 py-4 text-sm tracking-[0.1em] uppercase text-white transition-opacity hover:opacity-80"
@@ -669,9 +677,24 @@ export default function App() {
             WhatsApp para agendar
           </a>
 
+          <div
+            className="mt-10 overflow-hidden rounded-sm"
+            style={{ border: '1px solid #E8DDD4', backgroundColor: '#F0EAE0' }}
+          >
+            <iframe
+              title="Ubicación de Bonica Hair by Cris Hdez"
+              src={googleMapsEmbedUrl}
+              className="block w-full"
+              style={{ height: 'clamp(240px, 42vw, 340px)', border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+
           <div className="mt-8 flex flex-col items-center gap-3">
             <a
-              href="https://maps.google.com"
+              href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs tracking-[0.12em] uppercase text-[#BC7F91] hover:text-[#995B70] transition-colors"
@@ -683,7 +706,9 @@ export default function App() {
               Ver ubicación en Google Maps
             </a>
             <a
-              href="#"
+              href={facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-xs tracking-[0.12em] uppercase text-[#BC7F91]/70 hover:text-[#995B70] transition-colors"
             >
               Facebook
@@ -718,4 +743,3 @@ export default function App() {
     </div>
   )
 }
-
