@@ -27,6 +27,10 @@ import unas1 from './gallery/UNAS1.jpeg'
 import unas2 from './gallery/UNAS2.jpeg'
 import unas3 from './gallery/UNAS3.jpeg'
 import unas4 from './gallery/UNAS4.jpeg'
+import botoxCapilar from './gallery/PRODUCTOS/BOTOXCAPILAR.jpeg'
+import nanoplastiaFrutosRojos from './gallery/PRODUCTOS/NANOPLASTIAFRUTOSROJOS.jpeg'
+import serumYExtra from './gallery/PRODUCTOS/SERUMYEXTRA.jpeg'
+import sistemaAlgodon100 from './gallery/PRODUCTOS/SISTEMAALGODON100.jpeg'
 
 const whatsappUrl =
   'https://wa.me/528443068856?text=Hola%2C%20quisiera%20agendar%20una%20cita%20en%20Bonica%20Hair.'
@@ -205,6 +209,7 @@ const treatments = [
     num: '01',
     name: 'Sistema 100',
     intro: 'Alaciado de efecto liso, diseñado para reducir el frizz y dejar el cabello suave y manejable.',
+    price: '$1,000–$5,000',
     description: 'Tratamiento de alaciado que busca transformar la textura del cabello para conseguir un acabado liso y facilitar su manejo diario.',
     benefits: [
       '**Alacia 100%**.',
@@ -222,6 +227,7 @@ const treatments = [
     num: '02',
     name: 'Sistema 100 de Algodón',
     intro: 'Alaciado diseñado especialmente para cabellos decolorados, con mechas o sometidos a procesos de coloración.',
+    price: '$1,000–$5,000',
     description: 'Tratamiento de alaciado enfocado en conseguir un acabado liso mientras ayuda a mejorar la apariencia y manejabilidad del cabello procesado químicamente.',
     benefits: [
       '**Alacia 100%**.',
@@ -240,6 +246,7 @@ const treatments = [
     num: '03',
     name: 'Nanoplastia de Frutos Rojos',
     intro: 'Tratamiento de alaciado para reducir el frizz y conseguir un cabello más liso, suave y manejable.',
+    price: '$1,000–$5,000',
     description: 'Tratamiento capilar enfocado en suavizar la textura del cabello, controlar el esponjado y conseguir un acabado liso con movimiento natural.',
     benefits: [
       '**Alacia 90%**.',
@@ -261,6 +268,7 @@ const treatments = [
     num: '04',
     name: 'Botox Capilar',
     intro: 'Tratamiento que hidrata, suaviza y reduce el frizz sin alaciar el cabello.',
+    price: '$700–$2,000',
     description: 'Tratamiento capilar enfocado en mejorar la apariencia y manejabilidad del cabello, aportando suavidad e hidratación sin modificarlo para conseguir un acabado liso.',
     benefits: [
       'Relaja el cabello **sin alaciarlo**.',
@@ -272,16 +280,47 @@ const treatments = [
     ],
     hairTypes: '**Recomendado para cabello poroso, chicloso o delgado con daños por decoloraciones extremas.** También es una opción para quienes desean relajar el cabello, reducir el esponjado e hidratarlo sin buscar un alaciado.',
     duration: '**De 2 a 3 meses aproximadamente.**',
-    aftercare: 'Se recomienda lavar el cabello al día siguiente del tratamiento para obtener mejores resultados.',
+    aftercare: 'Se recomienda esperar 48 horas antes de lavar el cabello para obtener mejores resultados.',
     formula: ['**NO ALACIA**.', '**Sin formol.**', 'Elaborado a base de ácido hialurónico y aceites.', 'Un tratamiento que **NO PICA, NO IRRITA**.'],
   },
 ]
 
-const elixiumProductPlaceholders = [
-  { id: 'elixium-1', label: 'Producto ELIXIUM 1' },
-  { id: 'elixium-2', label: 'Producto ELIXIUM 2' },
-  { id: 'elixium-3', label: 'Producto ELIXIUM 3' },
+const elixiumProducts = [
+  {
+    id: 'sistema-100',
+    name: 'Sistema 100',
+    image: null,
+    description: 'Tratamiento profesional de alaciado diseñado para transformar el cabello rebelde, grueso o crespo, proporcionando un acabado liso, suave y manejable.',
+    ingredients: ['Keratina', 'Ácido hialurónico'],
+  },
+  {
+    id: 'sistema-100-algodon',
+    name: 'Sistema 100 de Algodón',
+    image: sistemaAlgodon100,
+    description: 'Tratamiento profesional de alaciado especialmente diseñado para cabellos decolorados, con mechas o procesados químicamente.',
+    ingredients: ['Aceite de semilla de algodón'],
+  },
+  {
+    id: 'nanoplastia-frutos-rojos',
+    name: 'Nanoplastia de Frutos Rojos',
+    image: nanoplastiaFrutosRojos,
+    description: 'Tratamiento capilar enfocado en suavizar la textura del cabello, controlar el frizz y conseguir un acabado más liso y brillante.',
+    ingredients: ['Células madre de guaraná'],
+  },
+  {
+    id: 'botox-capilar',
+    name: 'Botox Capilar / Botox Orgánico',
+    image: botoxCapilar,
+    description: 'Tratamiento capilar extrahidratante que ayuda a mejorar la apariencia del cabello dañado, reducir el frizz y aportar suavidad, nutrición y brillo.',
+    ingredients: ['Nuez moscada', 'Almendras dulces', 'Avellanas', 'Vitaminas', 'Antioxidantes', 'Biotina'],
+  },
 ]
+
+const complementaryProducts = {
+  id: 'productos-complementarios',
+  name: 'Sérum + Mascarillas complementarias',
+  image: serumYExtra,
+}
 
 function EmphasisText({ text }: { text: string }) {
   return (
@@ -737,27 +776,34 @@ export default function App() {
               <div key={t.id}>
                 {i > 0 && <div className="h-px" style={{ backgroundColor: '#E8DDD4' }} />}
                 <button
-                  className="w-full text-left py-6 flex items-start gap-6 group"
+                  type="button"
+                  aria-expanded={openTreatment === t.id}
+                  className="w-full text-left py-6 flex items-center gap-5 group"
                   onClick={() => toggleTreatment(t.id)}
                 >
                   <span className="text-xs tracking-[0.15em] pt-0.5 flex-none" style={{ color: '#BC7F91' }}>
                     {t.num}
                   </span>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <p
                       className="text-lg md:text-xl transition-colors group-hover:text-[#BC7F91]"
                       style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, color: '#4A3728' }}
                     >
                       {t.name}
                     </p>
-                    <p className="text-sm mt-1" style={{ color: '#4A3728', opacity: 0.5 }}>{t.intro}</p>
+                    <p className="mt-1 text-sm" style={{ color: '#4A3728', opacity: 0.56 }}>{t.price}</p>
                   </div>
-                  <span
-                    className="flex-none text-xl mt-1"
-                    style={{ color: '#BC7F91', transform: openTreatment === t.id ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease', display: 'inline-block' }}
-                  >
-                    +
-                  </span>
+                  <div className="ml-auto flex items-center gap-3">
+                    <span className="text-[10px] tracking-[0.18em] uppercase" style={{ color: '#BC7F91' }}>
+                      {openTreatment === t.id ? 'Ocultar detalles' : 'Ver detalles'}
+                    </span>
+                    <span
+                      className="flex-none text-xl"
+                      style={{ color: '#BC7F91', transform: openTreatment === t.id ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease', display: 'inline-block' }}
+                    >
+                      +
+                    </span>
+                  </div>
                 </button>
 
                 <div
@@ -807,50 +853,6 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Treatment detail fields */}
-                    <div className="hidden">
-                      {['Descripción', 'Beneficios', 'Tipo de cabello', 'Duración aprox.'].map(field => (
-                        <div key={field}>
-                          <p className="text-xs tracking-[0.12em] uppercase mb-1" style={{ color: '#BC7F91' }}>{field}</p>
-                          <div className="h-3 rounded w-3/4 mb-1" style={{ backgroundColor: '#E8DDD4' }} />
-                          <div className="h-3 rounded w-1/2" style={{ backgroundColor: '#E8DDD4' }} />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* ELIXIUM product sub-section */}
-                    <div className="hidden" style={{ borderColor: '#E8DDD4' }}>
-                      <p className="text-xs tracking-[0.18em] uppercase mb-4" style={{ color: '#C4B5A5' }}>
-                        Productos que utilizamos
-                      </p>
-                      <div className="flex gap-4 flex-wrap">
-                        {([] as { key: string; label: string }[]).map(p => (
-                          <div key={p.key} className="flex flex-col gap-2" style={{ width: '80px' }}>
-                            {/* Photo placeholder — replace src when product photos are ready */}
-                            <div
-                              className="rounded-sm w-full"
-                              style={{
-                                aspectRatio: '2/3',
-                                backgroundColor: '#F0EAE0',
-                                border: '1px solid #E8DDD4',
-                                display: 'flex',
-                                alignItems: 'flex-end',
-                                justifyContent: 'center',
-                                paddingBottom: '6px',
-                              }}
-                            >
-                              <span className="text-[8px] tracking-[0.1em] uppercase" style={{ color: '#C4B5A5' }}>
-                                Elixium
-                              </span>
-                            </div>
-                            <p className="text-[10px] text-center leading-tight" style={{ color: '#4A3728', opacity: 0.55 }}>
-                              {p.label}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
                     <a
                       href="#agenda"
                       className="self-start px-6 py-2.5 text-xs tracking-[0.15em] uppercase text-white transition-opacity hover:opacity-80"
@@ -862,7 +864,10 @@ export default function App() {
                 </div>
               </div>
             ))}
-            <div className="h-px" style={{ backgroundColor: '#E8DDD4' }} />
+            <div className="mt-4 text-center text-[11px] tracking-[0.12em] uppercase" style={{ color: '#BC7F91' }}>
+              Los precios pueden variar según el largo y la cantidad de cabello.
+            </div>
+            <div className="h-px mt-6" style={{ backgroundColor: '#E8DDD4' }} />
           </div>
 
           <div className="mt-10 rounded-sm p-6" style={{ backgroundColor: '#FFF5F7', border: '1px solid #E8DDD4' }}>
@@ -898,38 +903,60 @@ export default function App() {
 
             <div
               style={{
-                maxHeight: elixiumOpen ? '900px' : '0',
+                maxHeight: elixiumOpen ? '2200px' : '0',
                 overflow: 'hidden',
                 transition: 'max-height 0.45s ease',
               }}
             >
               <div className="pt-6 mt-6 border-t" style={{ borderColor: '#E8DDD4' }}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {elixiumProductPlaceholders.map(product => (
-                    <div key={product.id} className="rounded-sm p-4" style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8DDD4' }}>
-                      <div
-                        className="rounded-sm mb-4 flex items-center justify-center"
-                        style={{ aspectRatio: '4/5', backgroundColor: '#F0EAE0', border: '1px solid #E8DDD4' }}
-                      >
-                        <span className="text-[10px] tracking-[0.12em] uppercase" style={{ color: '#C4B5A5' }}>
-                          Foto pendiente
-                        </span>
-                      </div>
-                      <p className="text-xs tracking-[0.14em] uppercase mb-2" style={{ color: '#BC7F91' }}>
-                        {product.label}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                  {elixiumProducts.map(product => (
+                    <div key={product.id} className="rounded-sm p-3 flex h-full flex-col" style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8DDD4' }}>
+                      <p className="text-xs tracking-[0.14em] uppercase mb-3" style={{ color: '#BC7F91' }}>
+                        {product.name}
                       </p>
-                      <div className="space-y-3">
-                        {['Descripción pendiente', 'Ingredientes pendientes', 'Información del producto pendiente'].map(label => (
-                          <div key={label}>
-                            <p className="text-[10px] tracking-[0.1em] uppercase mb-1" style={{ color: '#C4B5A5' }}>
-                              {label}
+                      {product.image ? (
+                        <div className="mb-4 overflow-hidden rounded-sm border" style={{ aspectRatio: '1 / 1', backgroundColor: '#F5E0E5', borderColor: '#E8DDD4' }}>
+                          <img src={product.image} alt={product.name} className="h-full w-full object-cover" loading="lazy" />
+                        </div>
+                      ) : (
+                        <div
+                          className="mb-4 flex items-center justify-center rounded-sm"
+                          style={{ height: '18rem', backgroundColor: '#F0EAE0', border: '1px solid #E8DDD4' }}
+                        >
+                          <span className="text-[10px] tracking-[0.12em] uppercase" style={{ color: '#C4B5A5' }}>
+                            Producto ELIXIUM
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <p className="text-sm leading-relaxed mb-3" style={{ color: '#4A3728', opacity: 0.72 }}>{product.description}</p>
+                        {product.ingredients && (
+                          <div className="mb-3">
+                            <p className="text-[10px] tracking-[0.12em] uppercase mb-1" style={{ color: '#C4B5A5' }}>
+                              Ingredientes destacados
                             </p>
-                            <div className="h-2.5 rounded w-full" style={{ backgroundColor: '#E8DDD4' }} />
+                            <ul className="space-y-1">
+                              {product.ingredients.map(ingredient => (
+                                <li key={ingredient} className="text-xs leading-relaxed" style={{ color: '#4A3728', opacity: 0.7 }}>
+                                  • {ingredient}
+                                </li>
+                              ))}
+                            </ul>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="mt-6 overflow-hidden rounded-sm border" style={{ aspectRatio: '1 / 1', backgroundColor: '#F5E0E5', borderColor: '#E8DDD4' }}>
+                  <img
+                    src={complementaryProducts.image}
+                    alt={complementaryProducts.name}
+                    className="h-full w-full object-contain"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </div>
