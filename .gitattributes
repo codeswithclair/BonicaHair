@@ -20,6 +20,7 @@
 # Keep deploy-critical app images in regular Git so static hosts receive the
 # actual files even when Git LFS support is disabled.
 src/assets/*.png     -filter -diff -merge -text
+src/gallery/*        -filter -diff -merge -text
 
 # ---------------------------------------------------------------------------
 # Video
