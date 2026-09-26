@@ -21,6 +21,7 @@ import before4Color from './gallery/BEFORE4COLOR.jpeg'
 import color1 from './gallery/COLOR1.png'
 import color2 from './gallery/COLOR2.png'
 import corte1 from './gallery/CORTE1.png'
+import estudio from './gallery/ESTUDIO.jpeg'
 import maquillaje1 from './gallery/MAQUILLAJE1.jpeg'
 import maquillaje2 from './gallery/MAQUILLAJE2.jpeg'
 import unas1 from './gallery/UNAS1.jpeg'
@@ -1087,19 +1088,11 @@ export default function App() {
       <section id="estudio" className="pt-10 pb-12 px-6" style={{ backgroundColor: '#F0EAE0' }}>
         <FadeIn className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-center">
-            <div
-              className="w-full md:w-2/5 aspect-[4/5] rounded-sm flex-none"
-              style={{ backgroundColor: '#FAF7F2', border: '1px solid #E8DDD4' }}
-            >
-              <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-                <p className="text-xs tracking-[0.18em] uppercase" style={{ color: '#BC7F91' }}>
-                  Desde [año de inicio]
-                </p>
-                <p className="text-sm italic" style={{ color: '#4A3728', opacity: 0.5 }}>
-                  Fotografía del estudio próximamente.
-                </p>
-              </div>
-            </div>
+            <img
+              src={estudio}
+              alt="Interior del estudio de Bonica Hair"
+              className="w-full md:w-2/5 aspect-[4/5] rounded-sm flex-none object-cover"
+            />
 
             <div className="flex flex-col gap-6">
               <p className="text-xs tracking-[0.2em] uppercase" style={{ color: '#BC7F91' }}>El Estudio</p>
